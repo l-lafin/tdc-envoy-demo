@@ -2,7 +2,10 @@ version: "3.7"
 
 services:
   gateway:
+    container_name: tdc.gateway
+    image: tdc.gateway
     depends_on:
+      - oauth2-proxy
       - dummy-backend
     build:
       context: services/gateway
@@ -17,9 +20,22 @@ services:
       - env/.env.gateway
     volumes:
       - ./src/services/gateway/envoy.template.yml:/envoy.template.yml
+
+  oauth2-proxy:
+    container_name: tdc.oauth2-proxy
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.1.2-amd64
+    networks:
+      default:
+        aliases:
+          - oauth2-proxy.apps.internal
+    expose:
+      - "8080"
+    env_file:
+      - env/.env.oauth2-proxy
+
   dummy-backend:
-    container_name: dummy-backend
-    image: dummy-backend
+    container_name: tdc.dummy-backend
+    image: tdc.dummy-backend
     build:
       context: .
       dockerfile: services/dummy-backend/Dockerfile
