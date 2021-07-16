@@ -1,6 +1,22 @@
 version: "3.7"
 
 services:
+  gateway:
+    depends_on:
+      - dummy-backend
+    build:
+      context: services/gateway
+    networks:
+      default:
+        aliases:
+          - gateway.apps.internal
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    env_file:
+      - env/.env.gateway
+    volumes:
+      - ./src/services/gateway/envoy.template.yml:/envoy.template.yml
   dummy-backend:
     container_name: dummy-backend
     image: dummy-backend
