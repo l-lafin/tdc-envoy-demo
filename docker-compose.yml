@@ -1,6 +1,20 @@
 version: "3.7"
 
 services:
+  router:
+    container_name: tdc.router
+    image: tdc.router
+    depends_on:
+      - gateway
+    build:
+      context: services/router
+    ports:
+      - "443:443"
+      - "9090:9090"
+    volumes:
+      - ./services/router/envoy.yml:/etc/envoy/envoy.yml
+      - ./services/router/ssl:/etc/ssl
+
   gateway:
     container_name: tdc.gateway
     image: tdc.gateway
@@ -14,12 +28,12 @@ services:
         aliases:
           - gateway.apps.internal
     ports:
-      - "8080:8080"
-      - "9090:9090"
+      - "8888:8080"
+      - "9999:9090"
     env_file:
       - env/.env.gateway
     volumes:
-      - ./src/services/gateway/envoy.template.yml:/envoy.template.yml
+      - ./services/gateway/envoy.template.yml:/envoy.template.yml
 
   oauth2-proxy:
     container_name: tdc.oauth2-proxy
@@ -31,7 +45,7 @@ services:
     expose:
       - "8080"
     env_file:
-      - env/.env.oauth2-proxy
+      - env/.env.secrets
 
   dummy-backend:
     container_name: tdc.dummy-backend

@@ -18,3 +18,6 @@ EXPOSE 9090
 EXPOSE 8080
 
 CMD ["./startup.sh"]
+
+HEALTHCHECK --interval=10s --timeout=3s --retries=3 --start-period=90s \
+    CMD wget --quiet --tries=1 --spider --proxy off http://localhost:9090/ready || exit 1
