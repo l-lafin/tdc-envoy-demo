@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  dummy-backend:
+    container_name: dummy-backend
+    image: dummy-backend
+    build:
+      context: .
+      dockerfile: services/dummy-backend/Dockerfile
+      target: build
+    command: dotnet watch --project services/dummy-backend/dummy-backend.csproj run
+    ports:
+      - "4000:8080"
+      - "4001:9090"
+    networks:
+      default:
+        aliases:
+          - dummy-backend.apps.internal
+    volumes:
+      - ./services/dummy-backend/:/app/services/dummy-backend/
+      # these are required to exclude these folders from mounting
+      # they are needed to be local within the container
+      - /app/services/dummy-backend/obj/
+      - /app/services/dummy-backend/bin/
