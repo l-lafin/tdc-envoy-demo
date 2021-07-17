@@ -27,14 +27,29 @@ static_resources:
                         value: max-age=31536000
                   virtual_hosts:
                     - name: tdc-demo-envoy
+                      cors:
+                        allow_origin_string_match:
+                          - safe_regex:
+                              google_re2:
+                                max_program_size: 200
+                              regex: ^https:\/\/${APPLICATION_DOMAIN}$
+                        allow_methods: "POST, PUT, GET, DELETE"
+                        max_age: "86400"
                       domains: ["*"]
                       routes:
+                        - match:
+                            prefix: /api/digimon/
+                          route:
+                            cluster: digimon-api
+                            host_rewrite_literal: ${DIGIMON_EXTERNAL_DOMAIN}
                         - match:
                             prefix: /api/
                           route:
                             cluster: dummy-backend
                             prefix_rewrite: /
                 http_filters:
+                  - name: envoy.filters.http.cors
+                    typed_config: {}
                   - name: envoy.filters.http.router
                     typed_config: {}
 
@@ -51,6 +66,23 @@ static_resources:
                     socket_address:
                       address: dummy-backend.apps.internal
                       port_value: 8080
+    - name: digimon-api
+      connect_timeout: 10s
+      type: logical_dns
+      load_assignment:
+        cluster_name: digimon-api
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: ${DIGIMON_EXTERNAL_DOMAIN}
+                      port_value: 443
+      transport_socket:
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+
 admin:
   access_log_path: "/dev/stdout"
   address:
