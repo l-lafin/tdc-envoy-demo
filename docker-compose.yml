@@ -45,7 +45,25 @@ services:
     expose:
       - "8080"
     env_file:
-      - env/.env.secrets
+      - env/.env.oauth2-proxy
+
+  dex:
+    container_name: tdc.dex
+    image: sticksnleaves/dex:2.9
+    command: dex serve /etc/dex/dex.yml
+    ports:
+      - 5556:5556
+    volumes:
+      - ./services/dex/config/:/etc/dex/
+    healthcheck:
+      test: curl --fail --insecure https://localhost:5556/dex/healthz || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      default:
+        aliases:
+          - dex.tdc.digi.hero.local
 
   dummy-backend:
     container_name: tdc.dummy-backend

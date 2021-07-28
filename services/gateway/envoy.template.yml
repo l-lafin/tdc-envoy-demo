@@ -38,10 +38,22 @@ static_resources:
                       domains: ["*"]
                       routes:
                         - match:
+                            prefix: /
+                            headers:
+                              - name: x-forwarded-proto
+                                exact_match: http
+                          redirect:
+                            path_redirect: /
+                            https_redirect: true
+                        - match:
                             prefix: /api/digimon/
                           route:
                             cluster: digimon-api
                             host_rewrite_literal: ${DIGIMON_EXTERNAL_DOMAIN}
+                        - match:
+                            prefix: /oauth2/
+                          route:
+                            cluster: oauth-proxy
                         - match:
                             prefix: /api/
                           route:
@@ -50,10 +62,48 @@ static_resources:
                 http_filters:
                   - name: envoy.filters.http.cors
                     typed_config: {}
+                  - name: envoy.filters.http.ext_authz
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
+                      transport_api_version: V3
+                      http_service:
+                        server_uri:
+                          uri: oauth2-proxy.apps.internal:8080
+                          cluster: oauth-proxy
+                          timeout: 4s
+                        authorization_request:
+                          allowed_headers:
+                            patterns:
+                              - exact: cookie
+                              - prefix: x-
+                        authorization_response:
+                          allowed_client_headers:
+                            patterns:
+                              - exact: set-cookie
+                          allowed_client_headers_on_success:
+                            patterns:
+                              - exact: set-cookie
+                          allowed_upstream_headers:
+                            patterns:
+                              - exact: set-cookie
+                              - contains: authorization
+                              - prefix: x-auth-request
                   - name: envoy.filters.http.router
                     typed_config: {}
 
   clusters:
+    - name: oauth-proxy
+      connect_timeout: 4s
+      type: logical_dns
+      load_assignment:
+        cluster_name: oauth-proxy
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: oauth2-proxy.apps.internal
+                      port_value: 8080
     - name: dummy-backend
       connect_timeout: 1s
       type: logical_dns

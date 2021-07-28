@@ -28,4 +28,5 @@ function Add-TrustedCertificate {
 } 
 
 Add-HostEntry -DesiredIP 127.0.0.1 -Hostname tdc.digi.hero.local
+Add-HostEntry -DesiredIP 127.0.0.1 -Hostname dex.tdc.digi.hero.local
 Add-TrustedCertificate

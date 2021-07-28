@@ -278,3 +278,5 @@ __pycache__/
 # Ignoring certificate files
 *.crt
 *.key
+*.csr
+*.srl

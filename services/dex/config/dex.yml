@@ -1,0 +1,35 @@
+issuer: https://dex.tdc.digi.hero.local:5556/dex
+
+storage:
+  type: sqlite3
+  config:
+    file: examples/dex.db
+
+web:
+  allowedOrigins: ["*"]
+  https: 0.0.0.0:5556
+  tlsCert: /etc/dex/dex.tdc.digi.hero.local.crt
+  tlsKey: /etc/dex/dex.tdc.digi.hero.local.key
+
+telemetry:
+  http: 0.0.0.0:5558
+
+oauth2:
+  responseTypes: ["code", "token", "id_token"]
+  skipApprovalScreen: true
+
+staticClients:
+  - name: "oauth2_proxy"
+    id: b3b88048-eee2-4658-bff1-5a50361655b3
+    redirectURIs:
+      - "https://tdc.digi.hero.local/oauth2/callback"
+    secret: dDK-Dztp5DdswHp14IkT0zpSS_xxijLtR-wQIBv5
+
+connectors:
+enablePasswordDB: true
+
+staticPasswords:
+  - email: "digidev@tdc.local"
+    hash: "$2y$12$A75pvjrk08c2ZJ3D7eLmJO1pV5kxQlsHMNkGOzSURDMMy0gehHhby"
+    username: "digi_developer"
+    userID: "08a8684b-db88-4b73-90a9-3cd1661f5466"
