@@ -274,3 +274,7 @@ __pycache__/
 
 # Ignoring secrect environment variables.
 .env.secrets
+
+# Ignoring certificate files
+*.crt
+*.key
