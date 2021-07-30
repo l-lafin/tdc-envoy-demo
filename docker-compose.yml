@@ -55,6 +55,7 @@ services:
       - 5556:5556
     volumes:
       - ./services/dex/config/:/etc/dex/
+      - ./services/dex/templates/password.html:/go/src/github.com/coreos/dex/web/templates/password.html
     healthcheck:
       test: curl --fail --insecure https://localhost:5556/dex/healthz || exit 1
       interval: 10s
