@@ -46,6 +46,7 @@ services:
       - "8080"
     env_file:
       - env/.env.oauth2-proxy
+      - env/.env.secrets
 
   dex:
     container_name: tdc.dex

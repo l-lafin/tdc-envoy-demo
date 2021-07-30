@@ -22,6 +22,14 @@ function Add-HostEntry {
   }
 }
 
+function Set-EnvSecretFile {
+  $file_content = -join (
+    "OAUTH2_PROXY_CLIENT_ID=b3b88048-eee2-4658-bff1-5a50361655b3 `n",
+    "OAUTH2_PROXY_CLIENT_SECRET=dDK-Dztp5DdswHp14IkT0zpSS_xxijLtR-wQIBv5"
+  )
+  New-Item -Path ".\env" -Name ".env.secrets" -Value $file_content -ItemType "file" -Force
+}
+
 function Add-TrustedCertificate {
   Write-Host "Adding tdc.digi.hero.local certificate as trusted root" -ForegroundColor Gray
   Import-Certificate -FilePath .\services\router\ssl\cert.crt -CertStoreLocation cert:\CurrentUser\Root
@@ -30,3 +38,4 @@ function Add-TrustedCertificate {
 Add-HostEntry -DesiredIP 127.0.0.1 -Hostname tdc.digi.hero.local
 Add-HostEntry -DesiredIP 127.0.0.1 -Hostname dex.tdc.digi.hero.local
 Add-TrustedCertificate
+Set-EnvSecretFile
