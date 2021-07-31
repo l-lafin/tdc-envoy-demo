@@ -1,4 +1,4 @@
-version: "3.7"
+version: '3.7'
 
 services:
   router:
@@ -10,8 +10,8 @@ services:
     build:
       context: platform/router
     ports:
-      - "443:443"
-      - "9090:9090"
+      - '443:443'
+      - '9090:9090'
     volumes:
       - ./platform/router/envoy.yml:/etc/envoy/envoy.yml
       - ./platform/router/ssl:/etc/ssl
@@ -57,8 +57,8 @@ services:
         aliases:
           - digihero.gateway.apps.internal
     ports:
-      - "8888:8080"
-      - "9999:9090"
+      - '8888:8080'
+      - '9999:9090'
     env_file:
       - env/.env.gateway
     volumes:
@@ -74,7 +74,7 @@ services:
         aliases:
           - digihero.oauth2-proxy.apps.internal
     expose:
-      - "8080"
+      - '8080'
     env_file:
       - env/.env.oauth2-proxy
       - env/.env.secrets
@@ -86,15 +86,14 @@ services:
     build:
       context: .
       dockerfile: ./apps/digihero/services/frontend/Dockerfile
-      target: build
     ports:
-      - "3001:3000"
+      - '3001:3000'
     networks:
       default:
         aliases:
           - digihero.frontend.apps.internal
     volumes:
-      - ./apps/digihero/services/frontend:/apps/digihero/services/frontend
+      - ./apps/digihero/services/frontend:/var/app
       - /apps/digihero/services/frontend/node_modules/
 
   dummy-backend:
@@ -106,8 +105,8 @@ services:
       target: build
     command: dotnet watch --project services/dummy-backend/dummy-backend.csproj run
     ports:
-      - "4000:8080"
-      - "4001:9090"
+      - '4000:8080'
+      - '4001:9090'
     networks:
       default:
         aliases:
