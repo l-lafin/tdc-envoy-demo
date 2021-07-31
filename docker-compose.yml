@@ -2,8 +2,8 @@ version: "3.7"
 
 services:
   router:
-    container_name: tdc.router
-    image: tdc.router
+    container_name: tdc.platform.router
+    image: tdc.platform.router
     depends_on:
       - gateway
     build:
@@ -15,9 +15,28 @@ services:
       - ./platform/router/envoy.yml:/etc/envoy/envoy.yml
       - ./platform/router/ssl:/etc/ssl
 
+  dex:
+    container_name: tdc.platform.dex
+    image: sticksnleaves/dex:2.9
+    command: dex serve /etc/dex/dex.yml
+    ports:
+      - 5556:5556
+    volumes:
+      - ./platform/dex/config/:/etc/dex/
+      - ./platform/dex/templates/password.html:/go/src/github.com/coreos/dex/web/templates/password.html
+    healthcheck:
+      test: curl --fail --insecure https://localhost:5556/dex/healthz || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      default:
+        aliases:
+          - dex.tdc.demo.local
+
   gateway:
-    container_name: tdc.gateway
-    image: tdc.gateway
+    container_name: tdc.digihero.gateway
+    image: tdc.digihero.gateway
     depends_on:
       - oauth2-proxy
       - dummy-backend
@@ -36,7 +55,7 @@ services:
       - ./apps/digihero/services/gateway/envoy.template.yml:/envoy.template.yml
 
   oauth2-proxy:
-    container_name: tdc.oauth2-proxy
+    container_name: tdc.digihero.oauth2-proxy
     depends_on:
       - dex
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.1.2-amd64
@@ -50,28 +69,27 @@ services:
       - env/.env.oauth2-proxy
       - env/.env.secrets
 
-  dex:
-    container_name: tdc.dex
-    image: sticksnleaves/dex:2.9
-    command: dex serve /etc/dex/dex.yml
+  frontend:
+    stdin_open: true
+    container_name: tdc.digihero.frontend
+    image: tdc.digihero.frontend
+    build:
+      context: .
+      dockerfile: ./apps/digihero/services/frontend/Dockerfile
+      target: build
     ports:
-      - 5556:5556
-    volumes:
-      - ./platform/dex/config/:/etc/dex/
-      - ./platform/dex/templates/password.html:/go/src/github.com/coreos/dex/web/templates/password.html
-    healthcheck:
-      test: curl --fail --insecure https://localhost:5556/dex/healthz || exit 1
-      interval: 10s
-      timeout: 3s
-      retries: 3
+      - "3001:3000"
     networks:
       default:
         aliases:
-          - dex.tdc.demo.local
+          - digihero.frontend.apps.internal
+    volumes:
+      - ./apps/digihero/services/frontend:/apps/digihero/services/frontend
+      - /apps/digihero/services/frontend/node_modules/
 
   dummy-backend:
-    container_name: tdc.dummy-backend
-    image: tdc.dummy-backend
+    container_name: tdc.digihero.dummy-backend
+    image: tdc.digihero.dummy-backend
     build:
       context: .
       dockerfile: apps/digihero/services/dummy-backend/Dockerfile
@@ -83,7 +101,7 @@ services:
     networks:
       default:
         aliases:
-          - dummy-backend.apps.internal
+          - digihero.dummy-backend.apps.internal
     volumes:
       - ./apps/digihero/services/dummy-backend/:/app/services/dummy-backend/
       - /app/services/dummy-backend/obj/

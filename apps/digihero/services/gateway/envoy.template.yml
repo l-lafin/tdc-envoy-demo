@@ -59,6 +59,10 @@ static_resources:
                           route:
                             cluster: dummy-backend
                             prefix_rewrite: /
+                        - match:
+                            prefix: /
+                          route:
+                            cluster: frontend
                 http_filters:
                   - name: envoy.filters.http.cors
                     typed_config: {}
@@ -104,6 +108,18 @@ static_resources:
                     socket_address:
                       address: oauth2-proxy.apps.internal
                       port_value: 8080
+    - name: frontend
+      connect_timeout: 1s
+      type: logical_dns
+      load_assignment:
+        cluster_name: frontend
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: digihero.frontend.apps.internal
+                      port_value: 3000
     - name: dummy-backend
       connect_timeout: 1s
       type: logical_dns
@@ -114,7 +130,7 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: dummy-backend.apps.internal
+                      address: digihero.dummy-backend.apps.internal
                       port_value: 8080
     - name: digimon-api
       connect_timeout: 10s
