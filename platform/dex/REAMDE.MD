@@ -14,9 +14,9 @@ It is configured to be accessed over HTTPS with a certificate that is stored in 
 The self signed certificate in the `config` folder was generated using the following command:
 
 ```bash
-openssl req -newkey rsa:4096 -keyout dex.tdc.digi.hero.local.key -subj "/C=NL/ST=TdcDemoEnvoy/L=TdcDemoEnvoy/O=TdcDemoEnvoy Name/OU=Org/CN=dex.tdc.digi.hero.local" -nodes -reqexts SAN -config <(cat /etc/ssl/openssl.cnf <(printf "\n[SAN]\nsubjectAltName=DNS:dex.tdc.digi.hero.local")) -out dex.tdc.digi.hero.local.csr
+openssl req -newkey rsa:4096 -keyout dex.tdc.demo.local.key -subj "/C=NL/ST=TdcDemoEnvoy/L=TdcDemoEnvoy/O=TdcDemoEnvoy Name/OU=Org/CN=dex.tdc.demo.local" -nodes -reqexts SAN -config <(cat /etc/ssl/openssl.cnf <(printf "\n[SAN]\nsubjectAltName=DNS:dex.tdc.demo.local")) -out dex.tdc.demo.local.csr
 
-openssl x509 -req -extfile <(printf "subjectAltName=DNS:dex.tdc.digi.hero.local") -days 365 -in dex.tdc.digi.hero.local.csr -CA ../../router/ssl/cert.crt -CAkey ../../router/ssl/cert.key -CAcreateserial -out dex.tdc.digi.hero.local.crt
+openssl x509 -req -extfile <(printf "subjectAltName=DNS:dex.tdc.demo.local") -days 365 -in dex.tdc.demo.local.csr -CA ../../router/ssl/cert.crt -CAkey ../../router/ssl/cert.key -CAcreateserial -out dex.tdc.demo.local.crt
 
-rm dex.tdc.digi.hero.local.csr
+rm dex.tdc.demo.local.csr
 ```

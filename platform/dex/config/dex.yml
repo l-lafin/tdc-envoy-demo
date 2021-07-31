@@ -1,4 +1,4 @@
-issuer: https://dex.tdc.digi.hero.local:5556/dex
+issuer: https://dex.tdc.demo.local:5556/dex
 
 storage:
   type: sqlite3
@@ -8,8 +8,8 @@ storage:
 web:
   allowedOrigins: ["*"]
   https: 0.0.0.0:5556
-  tlsCert: /etc/dex/dex.tdc.digi.hero.local.crt
-  tlsKey: /etc/dex/dex.tdc.digi.hero.local.key
+  tlsCert: /etc/dex/dex.tdc.demo.local.crt
+  tlsKey: /etc/dex/dex.tdc.demo.local.key
 
 telemetry:
   http: 0.0.0.0:5558
@@ -22,7 +22,7 @@ staticClients:
   - name: "oauth2_proxy"
     id: b3b88048-eee2-4658-bff1-5a50361655b3
     redirectURIs:
-      - "https://tdc.digi.hero.local/oauth2/callback"
+      - "https://tdc.demo.local/oauth2/callback"
     secret: dDK-Dztp5DdswHp14IkT0zpSS_xxijLtR-wQIBv5
 
 connectors:

@@ -32,10 +32,10 @@ function Set-EnvSecretFile {
 
 function Add-TrustedCertificate {
   Write-Host "Adding tdc.digi.hero.local certificate as trusted root" -ForegroundColor Gray
-  Import-Certificate -FilePath .\services\router\ssl\cert.crt -CertStoreLocation cert:\CurrentUser\Root
+  Import-Certificate -FilePath .\platform\router\ssl\cert.crt -CertStoreLocation cert:\CurrentUser\Root
 } 
 
-Add-HostEntry -DesiredIP 127.0.0.1 -Hostname tdc.digi.hero.local
-Add-HostEntry -DesiredIP 127.0.0.1 -Hostname dex.tdc.digi.hero.local
+Add-HostEntry -DesiredIP 127.0.0.1 -Hostname tdc.demo.local
+Add-HostEntry -DesiredIP 127.0.0.1 -Hostname dex.tdc.demo.local
 Add-TrustedCertificate
 Set-EnvSecretFile
