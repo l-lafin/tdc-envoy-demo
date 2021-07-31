@@ -46,21 +46,22 @@ static_resources:
                             path_redirect: /
                             https_redirect: true
                         - match:
-                            prefix: /api/digimon/
+                            prefix: /digihero/api/digimon/
                           route:
                             cluster: digimon-api
+                            prefix_rewrite: /api/digimon/
                             host_rewrite_literal: ${DIGIMON_EXTERNAL_DOMAIN}
                         - match:
-                            prefix: /oauth2/
+                            prefix: /digihero/oauth2/
                           route:
                             cluster: oauth-proxy
                         - match:
-                            prefix: /api/
+                            prefix: /digihero/api/
                           route:
                             cluster: dummy-backend
-                            prefix_rewrite: /
+                            prefix_rewrite: /v1/
                         - match:
-                            prefix: /
+                            prefix: /digihero
                           route:
                             cluster: frontend
                 http_filters:
@@ -106,7 +107,7 @@ static_resources:
               - endpoint:
                   address:
                     socket_address:
-                      address: oauth2-proxy.apps.internal
+                      address: digihero.oauth2-proxy.apps.internal
                       port_value: 8080
     - name: frontend
       connect_timeout: 1s

@@ -40,12 +40,13 @@ services:
     depends_on:
       - oauth2-proxy
       - dummy-backend
+      - frontend
     build:
       context: apps/digihero/services/gateway
     networks:
       default:
         aliases:
-          - gateway.apps.internal
+          - digihero.gateway.apps.internal
     ports:
       - "8888:8080"
       - "9999:9090"
@@ -62,7 +63,7 @@ services:
     networks:
       default:
         aliases:
-          - oauth2-proxy.apps.internal
+          - digihero.oauth2-proxy.apps.internal
     expose:
       - "8080"
     env_file:

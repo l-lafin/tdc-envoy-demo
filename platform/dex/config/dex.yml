@@ -22,7 +22,7 @@ staticClients:
   - name: "oauth2_proxy"
     id: b3b88048-eee2-4658-bff1-5a50361655b3
     redirectURIs:
-      - "https://tdc.demo.local/oauth2/callback"
+      - "https://tdc.demo.local/digihero/oauth2/callback"
     secret: dDK-Dztp5DdswHp14IkT0zpSS_xxijLtR-wQIBv5
 
 connectors:
