@@ -6,6 +6,7 @@ services:
     image: tdc.platform.router
     depends_on:
       - gateway
+      - landingpage
     build:
       context: platform/router
     ports:
@@ -15,12 +16,24 @@ services:
       - ./platform/router/envoy.yml:/etc/envoy/envoy.yml
       - ./platform/router/ssl:/etc/ssl
 
+  landingpage:
+    container_name: tdc.platform.landingpage
+    image: nginx:1.20.1-alpine
+    networks:
+      default:
+        aliases:
+          - landinpage.tdc.demo.local
+
   dex:
     container_name: tdc.platform.dex
     image: sticksnleaves/dex:2.9
     command: dex serve /etc/dex/dex.yml
     ports:
       - 5556:5556
+    networks:
+      default:
+        aliases:
+          - dex.tdc.demo.local
     volumes:
       - ./platform/dex/config/:/etc/dex/
       - ./platform/dex/templates/password.html:/go/src/github.com/coreos/dex/web/templates/password.html
@@ -29,10 +42,6 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-    networks:
-      default:
-        aliases:
-          - dex.tdc.demo.local
 
   gateway:
     container_name: tdc.digihero.gateway
