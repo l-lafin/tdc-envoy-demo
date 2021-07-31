@@ -7,13 +7,13 @@ services:
     depends_on:
       - gateway
     build:
-      context: services/router
+      context: platform/router
     ports:
       - "443:443"
       - "9090:9090"
     volumes:
-      - ./services/router/envoy.yml:/etc/envoy/envoy.yml
-      - ./services/router/ssl:/etc/ssl
+      - ./platform/router/envoy.yml:/etc/envoy/envoy.yml
+      - ./platform/router/ssl:/etc/ssl
 
   gateway:
     container_name: tdc.gateway
@@ -22,7 +22,7 @@ services:
       - oauth2-proxy
       - dummy-backend
     build:
-      context: services/gateway
+      context: apps/digihero/services/gateway
     networks:
       default:
         aliases:
@@ -33,7 +33,7 @@ services:
     env_file:
       - env/.env.gateway
     volumes:
-      - ./services/gateway/envoy.template.yml:/envoy.template.yml
+      - ./apps/digihero/services/gateway/envoy.template.yml:/envoy.template.yml
 
   oauth2-proxy:
     container_name: tdc.oauth2-proxy
@@ -55,8 +55,8 @@ services:
     ports:
       - 5556:5556
     volumes:
-      - ./services/dex/config/:/etc/dex/
-      - ./services/dex/templates/password.html:/go/src/github.com/coreos/dex/web/templates/password.html
+      - ./platform/dex/config/:/etc/dex/
+      - ./platform/dex/templates/password.html:/go/src/github.com/coreos/dex/web/templates/password.html
     healthcheck:
       test: curl --fail --insecure https://localhost:5556/dex/healthz || exit 1
       interval: 10s
@@ -72,7 +72,7 @@ services:
     image: tdc.dummy-backend
     build:
       context: .
-      dockerfile: services/dummy-backend/Dockerfile
+      dockerfile: apps/digihero/services/dummy-backend/Dockerfile
       target: build
     command: dotnet watch --project services/dummy-backend/dummy-backend.csproj run
     ports:
@@ -83,8 +83,6 @@ services:
         aliases:
           - dummy-backend.apps.internal
     volumes:
-      - ./services/dummy-backend/:/app/services/dummy-backend/
-      # these are required to exclude these folders from mounting
-      # they are needed to be local within the container
+      - ./apps/digihero/services/dummy-backend/:/app/services/dummy-backend/
       - /app/services/dummy-backend/obj/
       - /app/services/dummy-backend/bin/
