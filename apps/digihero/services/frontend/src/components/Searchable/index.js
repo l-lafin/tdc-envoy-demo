@@ -1,0 +1,1 @@
+export { Searchable } from './Searchable'

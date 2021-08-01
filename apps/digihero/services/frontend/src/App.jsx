@@ -1,6 +1,6 @@
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { Header } from './components';
+import { Header, InfoPane } from './components';
 
 const App = () => {
   const theme = createTheme({
@@ -12,6 +12,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Header />
+      <InfoPane />
     </ThemeProvider>
   );
 };
