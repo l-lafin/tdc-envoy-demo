@@ -10,6 +10,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     flexWrap: 'wrap',
     display: 'flex',
+    overflowY: 'auto',
+    maxHeight: '700px',
   },
 }));
 

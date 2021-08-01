@@ -11,7 +11,7 @@ import { Favorite, FavoriteBorder } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    minWidth: '22%',
+    minWidth: '23%',
     margin: `${theme.spacing(1.5)}px`,
     display: 'flex',
   },
