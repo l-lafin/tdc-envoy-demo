@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const InfoPane = () => {
+export const DigiPane = () => {
   const classes = useStyles();
   const [level, setLevel] = useState('Rookie');
   const [{ data, loading }] = useAxios(`/digihero/api/digimon/level/${level}`);

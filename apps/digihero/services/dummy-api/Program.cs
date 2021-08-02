@@ -1,7 +1,8 @@
-namespace dummy_backend
+namespace dummy_api
 {
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
     public class Program
     {
         public static void Main(string[] args)
@@ -11,8 +12,12 @@ namespace dummy_backend
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
           Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(
-              webBuilder =>
+              .ConfigureLogging(logging =>
+              {
+                  logging.ClearProviders();
+                  logging.AddConsole();
+              })
+              .ConfigureWebHostDefaults(webBuilder =>
               {
                   webBuilder.UseStartup<Startup>().UseUrls("http://0.0.0.0:8080", "http://0.0.0.0:9090");
               });

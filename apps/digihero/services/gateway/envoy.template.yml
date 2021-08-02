@@ -58,8 +58,8 @@ static_resources:
                         - match:
                             prefix: /digihero/api/
                           route:
-                            cluster: dummy-backend
-                            prefix_rewrite: /v1/
+                            cluster: dummy-api
+                            prefix_rewrite: /v2/
                         - match:
                             prefix: /digihero
                           route:
@@ -121,17 +121,17 @@ static_resources:
                     socket_address:
                       address: digihero.frontend.apps.internal
                       port_value: 3000
-    - name: dummy-backend
+    - name: dummy-api
       connect_timeout: 1s
       type: logical_dns
       load_assignment:
-        cluster_name: dummy-backend
+        cluster_name: dummy-api
         endpoints:
           - lb_endpoints:
               - endpoint:
                   address:
                     socket_address:
-                      address: digihero.dummy-backend.apps.internal
+                      address: digihero.dummy-api.apps.internal
                       port_value: 8080
     - name: digimon-api
       connect_timeout: 10s

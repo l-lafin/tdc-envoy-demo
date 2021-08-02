@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Favorite, FavoriteBorder } from '@material-ui/icons';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,6 +37,14 @@ export const DigiCard = (props) => {
   const { name, level, img } = props;
   const [liked, setLiked] = useState(false);
   const classes = useStyles();
+
+  const likeUnlikeDigimon = (like) => {
+    axios.post('/digihero/api/Logger', {
+      message: `User ${like ? 'liked' : 'unliked'} ${name}.`,
+    });
+    setLiked(like);
+  };
+
   return (
     <Card className={classes.root}>
       <div className={classes.details}>
@@ -49,7 +58,7 @@ export const DigiCard = (props) => {
           <IconButton
             aria-label='like/unlike'
             className={classes.likeButton}
-            onClick={() => setLiked(!liked)}
+            onClick={() => likeUnlikeDigimon(!liked)}
           >
             {liked ? <Favorite /> : <FavoriteBorder />}
           </IconButton>

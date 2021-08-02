@@ -48,7 +48,7 @@ services:
     image: tdc.digihero.gateway
     depends_on:
       - oauth2-proxy
-      - dummy-backend
+      - dummy-api
       - frontend
     build:
       context: apps/digihero/services/gateway
@@ -96,22 +96,22 @@ services:
       - ./apps/digihero/services/frontend:/var/app
       - /apps/digihero/services/frontend/node_modules/
 
-  dummy-backend:
-    container_name: tdc.digihero.dummy-backend
-    image: tdc.digihero.dummy-backend
+  dummy-api:
+    container_name: tdc.digihero.dummy-api
+    image: tdc.digihero.dummy-api
     build:
       context: .
-      dockerfile: apps/digihero/services/dummy-backend/Dockerfile
+      dockerfile: apps/digihero/services/dummy-api/Dockerfile
       target: build
-    command: dotnet watch --project services/dummy-backend/dummy-backend.csproj run
+    command: dotnet watch --project services/dummy-api/dummy-api.csproj run
     ports:
       - '4000:8080'
       - '4001:9090'
     networks:
       default:
         aliases:
-          - digihero.dummy-backend.apps.internal
+          - digihero.dummy-api.apps.internal
     volumes:
-      - ./apps/digihero/services/dummy-backend/:/app/services/dummy-backend/
-      - /app/services/dummy-backend/obj/
-      - /app/services/dummy-backend/bin/
+      - ./apps/digihero/services/dummy-api/:/app/services/dummy-api/
+      - /app/services/dummy-api/obj/
+      - /app/services/dummy-api/bin/

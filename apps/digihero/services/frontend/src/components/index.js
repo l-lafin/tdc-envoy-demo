@@ -1,2 +1,2 @@
 export { Header } from './Header'
-export { InfoPane } from './InfoPane'
+export { DigiPane } from './DigiPane'

@@ -7,8 +7,8 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-ARG PATH_TO_PROJECT=apps/digihero/services/dummy-backend/
-ARG PATH_TO_ENTRY=dummy-backend
+ARG PATH_TO_PROJECT=apps/digihero/services/dummy-api/
+ARG PATH_TO_ENTRY=dummy-api
 
 COPY ${PATH_TO_PROJECT}/. ${PATH_TO_ENTRY}/
 
@@ -23,11 +23,11 @@ RUN dotnet publish --configuration Release --runtime linux-musl-x64
 FROM mcr.microsoft.com/dotnet/core/runtime-deps:3.1.3-alpine3.11 AS runtime
 WORKDIR /app
 
-COPY --from=publish /app/dummy-backend/bin/Release/netcoreapp3.1/linux-musl-x64/publish/ .
+COPY --from=publish /app/dummy-api/bin/Release/netcoreapp3.1/linux-musl-x64/publish/ .
 
 # Metrics port
 EXPOSE 9090
 # Application port
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "dummy-backend.dll"]
+ENTRYPOINT ["dotnet", "dummy-api.dll"]
