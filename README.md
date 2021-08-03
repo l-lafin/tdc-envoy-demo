@@ -26,10 +26,10 @@ The application is emulating a cloud platform solution based on containers that 
 
 Digihero is the demo application hosted under the platform domain for the path `/digihero`.
 
-| Component         | Details                                                                        |
-| ----------------- | ------------------------------------------------------------------------------ |
-| **Envoy gateway** | Entrypoint responsible to handle all the upcoming requests to the application. |
-| **Frontend**      | Frontend to be displayed to the user under the path `/digihero`.               |
-| **Dummy-api**     | Example of micro service to receive Api calls from the frontend.               |
+| Component         | Details                                                                                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Envoy gateway** | Entrypoint responsible to handle all the incoming requests to the application. It's the only component exposed to the routers. |
+| **Frontend**      | Frontend to be displayed to the user under the path `/digihero`.                                                               |
+| **Dummy-api**     | Example of micro service to receive Api calls from the frontend.                                                               |
 
 <br>
