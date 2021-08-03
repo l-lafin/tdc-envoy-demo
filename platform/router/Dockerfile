@@ -1,4 +1,4 @@
-FROM envoyproxy/envoy-alpine:v1.18.2
+FROM envoyproxy/envoy-alpine:v1.19.0
 
 COPY envoy.yml /etc/envoy/envoy.yaml
 COPY ./ssl/ /etc/ssl/

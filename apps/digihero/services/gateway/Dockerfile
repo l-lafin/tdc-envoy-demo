@@ -1,4 +1,4 @@
-FROM envoyproxy/envoy-alpine:v1.18.2
+FROM envoyproxy/envoy-alpine:v1.19.0
 
 RUN apk update && \
     apk add --no-cache \

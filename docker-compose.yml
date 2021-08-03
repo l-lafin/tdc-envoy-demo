@@ -30,8 +30,8 @@ services:
       timeout: 3s
       retries: 3
 
-  dex:
-    container_name: tdc.platform.dex
+  idp-dex:
+    container_name: tdc.platform.idp-dex
     image: sticksnleaves/dex:2.9
     command: dex serve /etc/dex/dex.yml
     ports:
@@ -66,14 +66,14 @@ services:
       # Administrator/metrics port
       - '9999:9090'
     env_file:
-      - env/.env.gateway
+      - apps/digihero/env/.env.gateway
     volumes:
       - ./apps/digihero/services/gateway/envoy.template.yml:/envoy.template.yml
 
   oauth2-proxy:
     container_name: tdc.digihero.oauth2-proxy
     depends_on:
-      - dex
+      - idp-dex
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.1.2-amd64
     networks:
       default:
@@ -82,8 +82,8 @@ services:
     expose:
       - '8080'
     env_file:
-      - env/.env.oauth2-proxy
-      - env/.env.secrets
+      - apps/digihero/env/.env.oauth2-proxy
+      - apps/digihero/env/.env.secrets
     healthcheck:
       test:
         [
