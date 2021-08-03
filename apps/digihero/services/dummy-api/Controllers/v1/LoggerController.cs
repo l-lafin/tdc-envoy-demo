@@ -2,6 +2,7 @@ namespace dummy_api.Controllers.v1
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using System;
 
     [Route("/v1/[controller]")]
     [ApiController]
@@ -11,6 +12,7 @@ namespace dummy_api.Controllers.v1
 
         public LoggerController(ILogger<LoggerController> logger) => _logger = logger;
 
+        [Obsolete]
         [HttpPost]
         public ActionResult LogAction()
         {

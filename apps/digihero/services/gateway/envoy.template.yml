@@ -46,20 +46,25 @@ static_resources:
                             path_redirect: /
                             https_redirect: true
                         - match:
+                            prefix: /digihero/oauth2/
+                          route:
+                            cluster: oauth-proxy
+                        - match:
                             prefix: /digihero/api/digimon/
                           route:
                             cluster: digimon-api
                             prefix_rewrite: /api/digimon/
                             host_rewrite_literal: ${DIGIMON_EXTERNAL_DOMAIN}
                         - match:
-                            prefix: /digihero/oauth2/
+                            prefix: /digihero/api/Logger
                           route:
-                            cluster: oauth-proxy
+                            prefix_rewrite: /v2/Logger
+                            cluster: dummy-api
                         - match:
                             prefix: /digihero/api/
                           route:
+                            prefix_rewrite: /
                             cluster: dummy-api
-                            prefix_rewrite: /v2/
                         - match:
                             prefix: /digihero
                           route:

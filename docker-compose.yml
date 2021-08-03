@@ -10,7 +10,9 @@ services:
     build:
       context: platform/router
     ports:
+      # Listening port
       - '443:443'
+      # Administrator/metrics port
       - '9090:9090'
     volumes:
       - ./platform/router/envoy.yml:/etc/envoy/envoy.yml
@@ -23,6 +25,10 @@ services:
       default:
         aliases:
           - landinpage.tdc.demo.local
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -O /dev/null http://localhost || exit 1']
+      timeout: 3s
+      retries: 3
 
   dex:
     container_name: tdc.platform.dex
@@ -57,7 +63,7 @@ services:
         aliases:
           - digihero.gateway.apps.internal
     ports:
-      - '8888:8080'
+      # Administrator/metrics port
       - '9999:9090'
     env_file:
       - env/.env.gateway
@@ -78,6 +84,20 @@ services:
     env_file:
       - env/.env.oauth2-proxy
       - env/.env.secrets
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--quiet',
+          '--tries=1',
+          '--spider',
+          'http://localhost:8080/ping',
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 90s
 
   frontend:
     stdin_open: true
@@ -86,8 +106,6 @@ services:
     build:
       context: .
       dockerfile: ./apps/digihero/services/frontend/Dockerfile
-    ports:
-      - '3001:3000'
     networks:
       default:
         aliases:
@@ -104,9 +122,6 @@ services:
       dockerfile: apps/digihero/services/dummy-api/Dockerfile
       target: build
     command: dotnet watch --project services/dummy-api/dummy-api.csproj run
-    ports:
-      - '4000:8080'
-      - '4001:9090'
     networks:
       default:
         aliases:

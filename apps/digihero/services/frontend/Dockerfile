@@ -13,6 +13,8 @@ COPY ${PATH_TO_SOLUTION}/. .
 
 RUN yarn install
 
+EXPOSE 3000
+
 CMD ["yarn", "start"]
-HEALTHCHECK --interval=10s --timeout=3s --start-period=90s --retries=3 \
-    CMD curl --fail http://localhost:3000/index.html || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=120s --retries=3 \
+    CMD curl --fail http://localhost:3000/digihero/index.html || exit 1
