@@ -27,7 +27,7 @@ function Set-EnvSecretFile {
     "OAUTH2_PROXY_CLIENT_ID=b3b88048-eee2-4658-bff1-5a50361655b3 `n",
     "OAUTH2_PROXY_CLIENT_SECRET=dDK-Dztp5DdswHp14IkT0zpSS_xxijLtR-wQIBv5"
   )
-  New-Item -Path ".\env" -Name ".env.secrets" -Value $file_content -ItemType "file" -Force
+  New-Item -Path ".\apps\digihero\env" -Name ".env.secrets" -Value $file_content -ItemType "file" -Force
 }
 
 function Add-TrustedCertificate {
