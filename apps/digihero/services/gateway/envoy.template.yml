@@ -120,6 +120,22 @@ static_resources:
                               - exact: set-cookie
                               - contains: authorization
                               - prefix: x-auth-request
+                  # Sets Envoy to execute the following Lua script in the incoming requests.
+                  - name: envoy.filters.http.lua
+                    typed_config:
+                      '@type': type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+                      inline_code: |
+                        function envoy_on_request(request_handle)
+
+                          -- Retrieves the value of the header 'x-auth-request-access-token'
+                          local accessToken=request_handle:headers():get("x-auth-request-access-token")
+
+                          if not(accessToken == nil or accessToken == '') then 
+                            -- Adds the access token as the 'Authorization' header in the incoming request.
+                            request_handle:headers():replace("Authorization","Bearer "..accessToken)
+                          end
+
+                        end
                   # Sets Envoy to use the routing configuration defined.
                   - name: envoy.filters.http.router
                     typed_config: {}

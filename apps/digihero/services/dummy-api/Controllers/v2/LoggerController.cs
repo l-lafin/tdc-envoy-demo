@@ -16,8 +16,9 @@ namespace dummy_api.Controllers.v2
         }
 
         [HttpPost]
-        public ActionResult LogAction([FromBody] LoggerAction action)
+        public ActionResult LogAction([FromHeader] string authorization, [FromBody] LoggerAction action)
         {
+            _logger.LogInformation($"Log performed for the token '{authorization}'.");
             _logger.LogInformation(action.Message);
             return Ok();
         }
