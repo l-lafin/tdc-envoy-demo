@@ -6,15 +6,11 @@ This is a repository containing a demo application using [Envoy proxy](https://w
 
 You can get started running this application with a few sets of configurations and requisites.
 
-<br/>
-
 ### _Requisites_
 
 You need to have the following softwares installed.
 
 - Docker/docker-compose
-
-<br/>
 
 ### _Configuration_
 
@@ -33,8 +29,6 @@ For _non-Windows_ users, you will need to manually configure the following items
 - Create a file at `.\apps\digihero\env\.env.secrets` containing the following variables.
   - OAUTH2_PROXY_CLIENT_ID=b3b88048-eee2-4658-bff1-5a50361655b3
   - OAUTH2_PROXY_CLIENT_SECRET=dDK-Dztp5DdswHp14IkT0zpSS_xxijLtR-wQIBv5
-
-<br/>
 
 ### _Run_
 
