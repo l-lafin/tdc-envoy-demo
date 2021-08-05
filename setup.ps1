@@ -31,7 +31,7 @@ function Set-EnvSecretFile {
 }
 
 function Add-TrustedCertificate {
-  Write-Host "Adding tdc.digi.hero.local certificate as trusted root" -ForegroundColor Gray
+  Write-Host "Adding tdc.demo.local certificate as trusted root" -ForegroundColor Gray
   Import-Certificate -FilePath .\platform\router\ssl\cert.crt -CertStoreLocation cert:\CurrentUser\Root
 } 
 

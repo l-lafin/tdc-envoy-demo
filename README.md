@@ -2,6 +2,52 @@
 
 This is a repository containing a demo application using [Envoy proxy](https://www.envoyproxy.io/) to be presented in the [The Developer Conference](https://thedevconf.com/tdc/2021/transformation/).
 
+## Get Started
+
+You can get started running this application with a few sets of configurations and requisites.
+
+<br/>
+
+### _Requisites_
+
+You need to have the following softwares installed.
+
+- Docker/docker-compose
+
+<br/>
+
+### _Configuration_
+
+For _Windows_ users, you can configure everything needed executing the following command as administrator from the root folder of the repository:
+
+```
+./setup.ps1
+```
+
+For _non-Windows_ users, you will need to manually configure the following items:
+
+- Add the following host entries to your host file config for the IP `127.0.0.1`:
+  - tdc.demo.local
+  - dex.tdc.demo.local
+- Import the trusted ssl certificates located at `.\platform\router\ssl\cert.crt` in your machine.
+- Create a file at `.\apps\digihero\env\.env.secrets` containing the following variables.
+  - OAUTH2_PROXY_CLIENT_ID=b3b88048-eee2-4658-bff1-5a50361655b3
+  - OAUTH2_PROXY_CLIENT_SECRET=dDK-Dztp5DdswHp14IkT0zpSS_xxijLtR-wQIBv5
+
+<br/>
+
+### _Run_
+
+Then start running the container executing the following command:
+
+```
+docker-compose up -d
+```
+
+Once all the containers are running you can open the applications in the browser using the addresses: https://tdc.demo.local/digihero or https://tdc.demo.local
+
+**_Note: You can check the container status performing `docker-compose ps`._**
+
 ## Architecture Design
 
 The application is emulating a cloud platform solution based on containers that should be able to support multiples products/services under the same domain.
