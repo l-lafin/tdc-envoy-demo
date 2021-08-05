@@ -64,7 +64,7 @@ services:
           - digihero.gateway.apps.internal
     ports:
       # Administrator/metrics port
-      - '9999:9090'
+      - '9999:9999'
     env_file:
       - apps/digihero/env/.env.gateway
     volumes:

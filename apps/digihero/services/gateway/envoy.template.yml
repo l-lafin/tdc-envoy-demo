@@ -1,6 +1,8 @@
 static_resources:
   listeners:
     - address:
+        # Defines the address and port that the Envoy will be listening to intercept the requests.
+        # In this example, Envoy is listening to requests that will reach port 8080.
         socket_address:
           address: 0.0.0.0
           port_value: 8080
@@ -18,6 +20,7 @@ static_resources:
                     path: /dev/stdout
                 route_config:
                   name: search_route
+                  # Manipulates the response for each incoming request adding the headers 'Content-Security-Policy' and 'Strict-Transport-Security'
                   response_headers_to_add:
                     - header:
                         key: Content-Security-Policy
@@ -27,51 +30,70 @@ static_resources:
                         value: max-age=31536000
                   virtual_hosts:
                     - name: tdc-demo-envoy
+                      # Defines the allowed methods/domains for the CORS policies.
                       cors:
                         allow_origin_string_match:
                           - safe_regex:
                               google_re2:
                                 max_program_size: 200
+                              # Checks the incoming request domain through a regex expression.
                               regex: ^https:\/\/${APPLICATION_DOMAIN}$
                         allow_methods: 'POST, PUT, GET, DELETE'
                         max_age: '86400'
                       domains: ['*']
+                      # Defines the routing rules for all incoming request.
+                      # The order of the rules matters and Envoy will use the first rule that fits the request.
                       routes:
+                        # Defines a routing rule based on the path and headers of the incoming request.
                         - match:
                             prefix: /
                             headers:
                               - name: x-forwarded-proto
                                 exact_match: http
                           redirect:
+                            # Forces a redirection to change the request from http to https.
                             path_redirect: /
                             https_redirect: true
                         - match:
                             prefix: /digihero/oauth2/
                           route:
                             cluster: oauth-proxy
+                        # Defines a routing rule for the path '/digihero/api/digimon/'
                         - match:
                             prefix: /digihero/api/digimon/
                           route:
+                            # Redirect the incoming request to the external domain/cluster 'digimon-api'
                             cluster: digimon-api
+                            # Rewrite the path from '/digihero/api/digimon/' to '/api/digimon/'
                             prefix_rewrite: /api/digimon/
                             host_rewrite_literal: ${DIGIMON_EXTERNAL_DOMAIN}
+                        # Defines an especific routing rule for the path '/digihero/api/Logger'
                         - match:
                             prefix: /digihero/api/Logger
                           route:
-                            prefix_rewrite: /v2/Logger
+                            # Redirect the incoming request to the internal cluster 'dummy-api'
                             cluster: dummy-api
+                            # Manipulates the requests according to the available API version
+                            # Rewrite the path from '/digihero/api/Logger' to '/v2/Logger'
+                            prefix_rewrite: /v2/Logger
+                        # Defines a wider routing rule in the path '/digihero/api/'
                         - match:
                             prefix: /digihero/api/
                           route:
-                            prefix_rewrite: /
                             cluster: dummy-api
+                            # Rewrite the path from '/digihero/api/' to '/'
+                            prefix_rewrite: /
                         - match:
                             prefix: /digihero
                           route:
                             cluster: frontend
+                # Defines a set of filters/actions to be executed on each incoming request.
+                # The filters order matters and Envoy will execute one filter after another.
                 http_filters:
+                  # Sets Envoy to check the CORS policies on every request.
                   - name: envoy.filters.http.cors
                     typed_config: {}
+                  # Sets Envoy to check the user authentication on every request.
                   - name: envoy.filters.http.ext_authz
                     typed_config:
                       '@type': type.googleapis.com/envoy.extensions.filters.http.ext_authz.v3.ExtAuthz
@@ -98,6 +120,7 @@ static_resources:
                               - exact: set-cookie
                               - contains: authorization
                               - prefix: x-auth-request
+                  # Sets Envoy to use the routing configuration defined.
                   - name: envoy.filters.http.router
                     typed_config: {}
 
@@ -111,6 +134,7 @@ static_resources:
           - lb_endpoints:
               - endpoint:
                   address:
+                    # Defines the endpoint and port for the cluster. See: docker-compose.yml the network config for the container oauth2-proxy.
                     socket_address:
                       address: digihero.oauth2-proxy.apps.internal
                       port_value: 8080
@@ -123,6 +147,7 @@ static_resources:
           - lb_endpoints:
               - endpoint:
                   address:
+                    # Defines the endpoint and port for the cluster. See: docker-compose.yml the network config for the container frontend.
                     socket_address:
                       address: digihero.frontend.apps.internal
                       port_value: 3000
@@ -135,6 +160,7 @@ static_resources:
           - lb_endpoints:
               - endpoint:
                   address:
+                    # Defines the endpoint and port for the cluster. See: docker-compose.yml the network config for the container dummy-api.
                     socket_address:
                       address: digihero.dummy-api.apps.internal
                       port_value: 8080
@@ -147,7 +173,9 @@ static_resources:
           - lb_endpoints:
               - endpoint:
                   address:
+                    # Defines the endpoint and port for the cluster.
                     socket_address:
+                      # Gets the external domain endpoint from environment variables. See: .env.gateway file.
                       address: ${DIGIMON_EXTERNAL_DOMAIN}
                       port_value: 443
       transport_socket:
@@ -155,9 +183,11 @@ static_resources:
         typed_config:
           '@type': type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
 
+# Defines the administrator/metrics endpoint in port 9999, we can connect tools such as Prometheus to extract metrics from the component.
+# This route must not be exposed externally in public environments, but locally in this example, you can reach in the http://localhost:9999
 admin:
   access_log_path: '/dev/stdout'
   address:
     socket_address:
       address: 0.0.0.0
-      port_value: 9090
+      port_value: 9999
