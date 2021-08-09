@@ -25,6 +25,9 @@ services:
       default:
         aliases:
           - landinpage.tdc.demo.local
+    volumes:
+      - ./platform/landingpage/index.html:/usr/share/nginx/html/index.html
+      - ./platform/landingpage/static/:/usr/share/nginx/html/static/
     healthcheck:
       test: ['CMD-SHELL', 'wget -O /dev/null http://localhost || exit 1']
       timeout: 3s

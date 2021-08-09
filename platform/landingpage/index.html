@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./static/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>Welcome to Envoy Demo</title>
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            background-color: #303030;
+            color: white;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .images-sizes {
+            max-height: 250px;
+        }
+
+        .items-margin {
+            margin: 20px;
+        }
+
+    </style>
+  </head>
+  <body>
+      <div class="flex-container">
+          <div class="items-margin">
+              <a href="https://tdc.demo.local/digihero" title="Digihero">
+                <img class="images-sizes" src="./static/digihero.png" alt="Digihero" />
+              </a>
+          </div>
+          <div class="items-margin">
+              <a href="https://www.envoyproxy.io/" title="Envoy proxy">
+                  <img class="images-sizes" src="./static/envoy-logo.svg" alt="Envoy proxy" />
+              </a>
+          </div>
+          <div>
+              <a href="https://thedevconf.com/?" title="The developer conference">
+                <img class="images-sizes" src="./static/logo-tdc.png" alt="The developer conference" />
+              </a>
+          </div>
+      </div>
+  </body>
+</html>
