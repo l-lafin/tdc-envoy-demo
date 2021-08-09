@@ -28,8 +28,12 @@ export const Header = () => {
           href='https://thedevconf.com/?'
           title='TDC'
           className={classes.tdc}
-        />
-        <Link href='#' title='Digihero' className={classes.digihero} />
+        >
+          <div />
+        </Link>
+        <Link href='#' title='Digihero' className={classes.digihero}>
+          <div />
+        </Link>
         <UserInfo />
       </Toolbar>
     </AppBar>
